@@ -2,3 +2,4 @@
 bin/
 conf.json
 a
+*_snapshot
