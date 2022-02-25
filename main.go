@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"myproject/version"
+	"minimalcli/version"
 	"os"
 	"path/filepath"
 

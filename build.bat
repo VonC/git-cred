@@ -1,25 +1,25 @@
 @echo off
 setlocal
 
-set GO111MODULE=on
-set GOPROXY=https://proxy.golang.org
-set GOROOT=%PRGS%\gos\current
-
 for %%i in ("%~dp0.") do SET "script_dir=%%~fi"
 cd "%script_dir%" || echo "unable to cd to '%script_dir%'"&& exit /b 1
-call  "%script_dir%\batcolors\echos_macros.bat"
 setlocal enabledelayedexpansion
 for %%i in ("%~dp0.") do SET "dirname=%%~ni"
 
 if not exist batcolors\echos.bat (
-    %_warning% "Missing submodules"
-    %_info% "Executing 'git submodule update --init'"
+    echo Missing submodules
+    echo Executing 'git submodule update --init'
     git submodule update --init
     if errorlevel 1 (
-        %_fatal% "Submodules not properly initialized" 6
+        echo "Submodules not properly initialized"
+        exit /b 1
     )
 )
+call  "%script_dir%\batcolors\echos_macros.bat"
 
+if exist "%script_dir%\senv.bat" (
+    call "%script_dir%\senv.bat"
+)
 
 for /f "delims=" %%i in ('type "%script_dir%\go.mod"') do (
     if "!module_name!" == "" (

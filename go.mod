@@ -1,4 +1,4 @@
-module myproject
+module minimalcli
 
 go 1.17
 
