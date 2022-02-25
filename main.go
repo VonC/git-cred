@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"minimalcli/internal/syscall"
 	"minimalcli/version"
 	"os"
 	"path/filepath"
@@ -44,6 +45,12 @@ func main() {
 
 	spew.Dump(c)
 	q.Q(c)
+
+	stderr, stdout, err := syscall.ExecCmd("hostname")
+	fatal("Unable to call hostname", err)
+
+	fmt.Printf("Stdout: '%s'\n", stdout.String())
+	fmt.Printf("Stderr: '%s'\n", stderr.String())
 
 	fmt.Println(os.Args[0])
 }
