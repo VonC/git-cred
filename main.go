@@ -15,9 +15,8 @@ import (
 
 // Config stores arguments and subcommands
 type Config struct {
-	Host    string `opts:"help=repository hosting service name, mode=arg"`
-	Version bool   `help:"if true, print Version and exit."`
-	Debug   bool   `help:"if true, print Debug information."`
+	Host  string `opts:"help=repository hosting service name, mode=arg"`
+	Debug bool   `help:"if true, print Debug information."`
 }
 
 var c = &Config{}
@@ -42,11 +41,8 @@ func main() {
 	log.Println(dir)
 	opts.New(c).
 		ConfigPath(filepath.Join(dir, "conf.json")).
+		Version(version.String()).
 		Parse()
-	if c.Version {
-		fmt.Println(version.String())
-		os.Exit(0)
-	}
 
 	if c.Debug {
 		spew.Dump(c)
