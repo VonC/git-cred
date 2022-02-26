@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"gitcred/internal/credhelper"
+	"gitcred/version"
 	"log"
-	"minimalcli/internal/syscall"
-	"minimalcli/version"
 	"os"
 	"path/filepath"
 
@@ -15,8 +15,9 @@ import (
 
 // Config stores arguments and subcommands
 type Config struct {
-	Arg     string `help:"a string argument"`
+	Host    string `opts:"help=repository hosting service name, mode=arg"`
 	Version bool   `help:"if true, print Version and exit."`
+	Debug   bool   `help:"if true, print Debug information."`
 }
 
 var c = &Config{}
@@ -25,6 +26,10 @@ func fatal(msg string, err error) {
 	if err != nil {
 		log.Fatalf("%s: error '%+v'", msg, err)
 	}
+}
+
+type CredHelper interface {
+	Get() (string, error)
 }
 
 // myproject main entry
@@ -43,14 +48,17 @@ func main() {
 		os.Exit(0)
 	}
 
-	spew.Dump(c)
-	q.Q(c)
-
-	stderr, stdout, err := syscall.ExecCmd("hostname")
-	fatal("Unable to call hostname", err)
-
-	fmt.Printf("Stdout: '%s'\n", stdout.String())
-	fmt.Printf("Stderr: '%s'\n", stderr.String())
+	if c.Debug {
+		spew.Dump(c)
+		q.Q(c)
+	}
 
 	fmt.Println(os.Args[0])
+
+	var ch CredHelper
+	ch, err = credhelper.NewCredHelper(c.Host)
+	fatal("Unable to get Credential Helper", err)
+	get, err := ch.Get()
+	fatal("Get error", err)
+	fmt.Println(get)
 }

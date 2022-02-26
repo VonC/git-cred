@@ -1,4 +1,4 @@
-module minimalcli
+module gitcred
 
 go 1.17
 

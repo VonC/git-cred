@@ -6,7 +6,7 @@ package syscall
 import (
 	"bytes"
 	"fmt"
-	"minimalcli/internal/logger"
+	"gitcred/internal/logger"
 	"os/exec"
 	"strings"
 	"syscall"
