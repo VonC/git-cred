@@ -5,9 +5,14 @@ import (
 	"gitcred/internal/syscall"
 )
 
-func (ch *credHelper) Get() (string, error) {
+func (ch *credHelper) Get(username string) (string, error) {
 	fmt.Println("Get")
-	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\"|\"%s\" get", ch.host, ch.exe)
+	ch.username = username
+	u := ""
+	if ch.username != "" {
+		u = "\\nusername=" + ch.username
+	}
+	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https%s\"|\"%s\" get", ch.host, u, ch.exe)
 	//fmt.Println(cmd)
 	_, stdout, err := syscall.ExecCmd(cmd)
 
