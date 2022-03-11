@@ -24,7 +24,6 @@ type creds []*cred
 type cred struct {
 	host     string
 	username string
-	password string
 }
 
 func NewCredHelper(host string) (*credHelper, error) {
@@ -99,7 +98,7 @@ func getLocalHosts() ([]string, error) {
 }
 
 func getUniqueRemoteNames() (remotes, error) {
-	res := make(orderedSet, 0)
+	res := make(orderedSet)
 	stderr, stdout, err := syscall.ExecCmd("git remote")
 	serr := stderr.String()
 	if err != nil && serr != "" {
@@ -131,7 +130,7 @@ func (os orderedSet) set() []string {
 }
 
 func (remotes remotes) getUniqueHosts() (hosts, error) {
-	res := make(orderedSet, 0)
+	res := make(orderedSet)
 	for remote := range remotes {
 		hosts, err := getUniqueHostsFromRemote(remote)
 		if err != nil {
@@ -145,7 +144,7 @@ func (remotes remotes) getUniqueHosts() (hosts, error) {
 }
 
 func getUniqueHostsFromRemote(remote string) (hosts, error) {
-	res := make(orderedSet, 0)
+	res := make(orderedSet)
 	stderr, stdout, err := syscall.ExecCmd("git remote get-url --all " + remote)
 	serr := stderr.String()
 	if err != nil && serr != "" {
