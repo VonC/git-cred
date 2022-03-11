@@ -15,29 +15,27 @@ import (
 
 // Config stores arguments and subcommands
 type Config struct {
-	Host     string `opts:"help=repository hosting service name, mode=arg"`
-	Debug    bool   `help:"if true, print Debug information."`
-	Username string `help:"Get: username, by default current user if not set"`
-	*Set     `opts:"mode=cmd,help=set user password for a given host"`
-	*Erase   `opts:"mode=cmd,help=erase password for a given host and username"`
-	ch       CredHelper
+	Servername string `help:"help=repository hosting server name (hostname). If not set, use the one from current repository folder, if present in pwd"`
+	Debug      bool   `help:"if true, print Debug information."`
+	Username   string `help:"Get: username. If not set, use the one from from current repository remote URL, if present in pwd"`
+	*Set       `opts:"mode=cmd,help=[password] set user password for a given host: -u/--username mandatory"`
+	*Erase     `opts:"mode=cmd,help=erase password for a given host and username: -u/--username and -s/--servername mandatory"`
+	ch         CredHelper
 }
 
 type Set struct {
-	User     string `opts:"help=username, mode=arg"`
 	Password string `opts:"help=user password, mode=arg"`
 }
 
 func (s *Set) isEmpty() bool {
-	return !(s != nil && s.User != "" && s.Password != "")
+	return !(s != nil && s.Password != "")
 }
 
 type Erase struct {
-	User string `opts:"help=username, mode=arg"`
 }
 
 func (e *Erase) isEmpty() bool {
-	return !(e != nil && e.User != "")
+	return !(e != nil)
 }
 
 var c = &Config{}
@@ -50,8 +48,9 @@ func fatal(msg string, err error) {
 
 type CredHelper interface {
 	Get(username string) (string, error)
-	Set(username, password string) error
-	Erase(username string) error
+	Set(username, password, host string) error
+	Erase(username, host string) error
+	Host() string
 }
 
 // myproject main entry
@@ -75,18 +74,21 @@ func main() {
 	//fmt.Println(os.Args[0])
 
 	var ch CredHelper
-	ch, err = credhelper.NewCredHelper(c.Host)
+	ch, err = credhelper.NewCredHelper(c.Servername)
 	fatal("Unable to get Credential Helper", err)
 	c.ch = ch
+	if c.Servername == "" {
+		c.Servername = c.ch.Host()
+	}
 	err = c.Run()
 	fatal("gitcred ERROR", err)
 }
 
 func (c *Config) Run() error {
-	if !c.Set.isEmpty() {
+	if !c.Set.isEmpty() && c.Username != "" {
 		return c.Set.Run()
 	}
-	if !c.Erase.isEmpty() {
+	if !c.Erase.isEmpty() && c.Username != "" && c.Servername != "" {
 		return c.Erase.Run()
 	}
 	get, err := c.ch.Get(c.Username)
@@ -98,11 +100,11 @@ func (c *Config) Run() error {
 }
 
 func (s *Set) Run() error {
-	err := c.ch.Set(s.User, s.Password)
+	err := c.ch.Set(c.Username, s.Password, c.ch.Host())
 	return err
 }
 
 func (e *Erase) Run() error {
-	err := c.ch.Erase(e.User)
+	err := c.ch.Erase(c.Username, c.ch.Host())
 	return err
 }

@@ -3,21 +3,26 @@ package credhelper
 import (
 	"fmt"
 	"gitcred/internal/syscall"
+	"strings"
 )
 
 func (ch *credHelper) Get(username string) (string, error) {
-	fmt.Println("Get")
-	ch.username = username
-	u := ""
-	if ch.username != "" {
-		u = "\\nusername=" + ch.username
-	}
-	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https%s\"|\"%s\" get", ch.host, u, ch.exe)
-	//fmt.Println(cmd)
-	_, stdout, err := syscall.ExecCmd(cmd)
+	fmt.Printf("Get")
+	res := ""
+	for _, cred := range ch.creds {
+		res = res + "\n" + username + "@" + cred.host + ":\n"
+		u := ""
+		if username != "" {
+			u = "\\nusername=" + username
+		}
+		cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=%s%s\"|\"%s\" get", cred.host, ch.protocol, u, ch.exe)
+		//fmt.Println(cmd)
+		_, stdout, err := syscall.ExecCmd(cmd)
 
-	if err != nil {
-		return "", fmt.Errorf("unable to get credential.helper value for Host '%s':\n%w", ch.host, err)
+		if err != nil {
+			return "", fmt.Errorf("unable to get credential.helper value for Host '%s@%s':\n%w", username, cred.host, err)
+		}
+		res = res + strings.TrimSpace(stdout.String())
 	}
-	return stdout.String(), nil
+	return res, nil
 }

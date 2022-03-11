@@ -5,15 +5,14 @@ import (
 	"gitcred/internal/syscall"
 )
 
-func (ch *credHelper) Erase(username string) error {
+func (ch *credHelper) Erase(username, host string) error {
 	fmt.Println("Erase")
-	ch.username = username
-	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\"|\"%s\" erase", ch.host, ch.username, ch.exe)
+	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\"|\"%s\" erase", host, username, ch.exe)
 	//fmt.Println(cmd)
 	_, _, err := syscall.ExecCmd(cmd)
 
 	if err != nil {
-		return fmt.Errorf("unable to erase credential.helper value for Host '%s' and username '%s':\n%w", ch.host, ch.username, err)
+		return fmt.Errorf("unable to erase credential.helper value for Host '%s' and username '%s':\n%w", host, username, err)
 	}
 	return nil
 }
