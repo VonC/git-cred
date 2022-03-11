@@ -68,7 +68,7 @@ func main() {
 	//fmt.Println(os.Args[0])
 
 	var ch CredHelper
-	ch, err = credhelper.NewCredHelper(c.Servername)
+	ch, err = credhelper.NewCredHelper(c.Servername, c.Username)
 	fatal("Unable to get Credential Helper", err)
 	c.ch = ch
 	if c.Servername == "" {
