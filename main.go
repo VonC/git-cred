@@ -5,14 +5,15 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/VonC/gitcred/version"
+	"github.com/ryboe/q"
+	"github.com/spewerspew/spew"
 
 	"github.com/VonC/gitcred/internal/credhelper"
 
 	"github.com/jpillora/opts"
-	"github.com/ryboe/q"
-	"github.com/spewerspew/spew"
 )
 
 // Config stores arguments and subcommands
@@ -29,15 +30,7 @@ type Set struct {
 	Password string `opts:"help=user password, mode=arg"`
 }
 
-func (s *Set) isEmpty() bool {
-	return !(s != nil && s.Password != "")
-}
-
 type Erase struct {
-}
-
-func (e *Erase) isEmpty() bool {
-	return !(e != nil)
 }
 
 var c = &Config{}
@@ -68,11 +61,6 @@ func main() {
 		Version(version.String()).
 		Parse()
 
-	if c.Debug {
-		spew.Dump(c)
-		q.Q(c)
-	}
-
 	//fmt.Println(os.Args[0])
 
 	var ch CredHelper
@@ -80,18 +68,30 @@ func main() {
 	fatal("Unable to get Credential Helper", err)
 	c.ch = ch
 	if c.Servername == "" {
-		c.Servername = c.ch.Host()
+		c.Servername = ch.Host()
 	}
+	if !hasCmd("erase") {
+		c.Erase = nil
+	}
+	if !hasCmd("set") {
+		c.Set = nil
+	}
+
+	if c.Debug {
+		spew.Dump(c)
+		q.Q(c)
+	}
+
 	err = c.Run()
 	fatal("gitcred ERROR", err)
 }
 
 func (c *Config) Run() error {
-	if !c.Set.isEmpty() && c.Username != "" {
-		return c.Set.Run()
-	}
-	if !c.Erase.isEmpty() && c.Username != "" && c.Servername != "" {
+	if c.Erase != nil {
 		return c.Erase.Run()
+	}
+	if c.Set != nil {
+		return c.Set.Run()
 	}
 	get, err := c.ch.Get(c.Username)
 	if err != nil {
@@ -109,4 +109,19 @@ func (s *Set) Run() error {
 func (e *Erase) Run() error {
 	err := c.ch.Erase(c.Username, c.ch.Host())
 	return err
+}
+
+func hasCmd(cmd string) bool {
+	previousIsOption := false
+	for _, arg := range os.Args {
+		if strings.HasPrefix(arg, "-") {
+			previousIsOption = true
+			continue
+		}
+		if cmd == arg && !previousIsOption {
+			return true
+		}
+		previousIsOption = false
+	}
+	return false
 }
