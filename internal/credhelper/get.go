@@ -15,9 +15,11 @@ func (ch *credHelper) Get(username string) (string, error) {
 		u := ""
 		if username != "" {
 			u = "\\nusername=" + username
+		} else if cred.username != "" {
+			u = "\\nusername=" + cred.username
 		}
 		cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=%s%s\"|\"%s\" get", cred.host, ch.protocol, u, ch.exe)
-		//fmt.Println(cmd)
+		fmt.Println(cmd)
 		_, stdout, err := syscall.ExecCmd(cmd)
 
 		if err != nil {
