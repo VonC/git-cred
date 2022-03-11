@@ -8,8 +8,14 @@ import (
 
 func (ch *credHelper) Erase(username, host string) error {
 	fmt.Println("Erase")
+	if username == "" {
+		return fmt.Errorf("erase: --username is mandatory")
+	}
+	if host == "" {
+		return fmt.Errorf("erase: --servername is mandatory")
+	}
 	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\"|\"%s\" erase", host, username, ch.exe)
-	//fmt.Println(cmd)
+	fmt.Println(cmd)
 	_, _, err := syscall.ExecCmd(cmd)
 
 	if err != nil {
