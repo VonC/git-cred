@@ -2,7 +2,6 @@ package credhelper
 
 import (
 	"fmt"
-	"gitcred/internal/syscall"
 	"log"
 	"net/url"
 	"os"
@@ -10,6 +9,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/VonC/gitcred/internal/syscall"
 )
 
 type credHelper struct {

@@ -1,4 +1,4 @@
-module gitcred
+module github.com/VonC/gitcred
 
 go 1.17
 

@@ -2,7 +2,8 @@ package credhelper
 
 import (
 	"fmt"
-	"gitcred/internal/syscall"
+
+	"github.com/VonC/gitcred/internal/syscall"
 )
 
 func (ch *credHelper) Set(username, password, host string) error {

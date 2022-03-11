@@ -2,8 +2,9 @@ package credhelper
 
 import (
 	"fmt"
-	"gitcred/internal/syscall"
 	"strings"
+
+	"github.com/VonC/gitcred/internal/syscall"
 )
 
 func (ch *credHelper) Get(username string) (string, error) {

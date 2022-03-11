@@ -6,10 +6,11 @@ package syscall
 import (
 	"bytes"
 	"fmt"
-	"gitcred/internal/logger"
 	"os/exec"
 	"strings"
 	"syscall"
+
+	"github.com/VonC/gitcred/internal/logger"
 )
 
 // ExecCmd starts a sh -c 'scmd' session.

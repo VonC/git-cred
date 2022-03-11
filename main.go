@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"gitcred/internal/credhelper"
-	"gitcred/version"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/VonC/gitcred/version"
+
+	"github.com/VonC/gitcred/internal/credhelper"
 
 	"github.com/jpillora/opts"
 	"github.com/ryboe/q"
