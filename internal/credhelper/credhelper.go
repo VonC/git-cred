@@ -26,7 +26,7 @@ type cred struct {
 	username string
 }
 
-func NewCredHelper(host string) (*credHelper, error) {
+func NewCredHelper(host, username string) (*credHelper, error) {
 	ch := &credHelper{
 		protocol: "https",
 		creds:    make(creds, 0),
@@ -75,6 +75,12 @@ func NewCredHelper(host string) (*credHelper, error) {
 			}
 			ch.creds = append(ch.creds, cred)
 		}
+	} else if username != "" {
+		cred := &cred{
+			host:     host,
+			username: username,
+		}
+		ch.creds = append(ch.creds, cred)
 	}
 
 	return ch, nil
