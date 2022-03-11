@@ -21,6 +21,7 @@ type Config struct {
 	Servername string `help:"help=repository hosting server name (hostname). If not set, use the one from current repository folder, if present in pwd"`
 	Debug      bool   `help:"if true, print Debug information."`
 	Username   string `help:"Get: username. If not set, use the one from from current repository remote URL, if present in pwd"`
+	*Get       `opts:"mode=cmd,help=get password for a given host and username: can read those from current folder repository"`
 	*Set       `opts:"mode=cmd,help=[password] set user password for a given host: -u/--username mandatory"`
 	*Erase     `opts:"mode=cmd,help=erase password for a given host and username: -u/--username and -s/--servername mandatory"`
 	ch         CredHelper
@@ -31,6 +32,9 @@ type Set struct {
 }
 
 type Erase struct {
+}
+
+type Get struct {
 }
 
 var c = &Config{}
