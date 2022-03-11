@@ -1,4 +1,5 @@
 {
-    "Arg"       : "value",
-    "Arg2"      : "value2"
+    "Debug"      : true,
+    "Servername" : "github.com",
+    "Username"   : "VonC"
 }
