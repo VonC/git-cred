@@ -13,7 +13,7 @@ import (
 
 	"github.com/VonC/gitcred/internal/credhelper"
 
-	"github.com/jpillora/opts"
+	"github.com/VonC/opts"
 )
 
 // Config stores arguments and subcommands

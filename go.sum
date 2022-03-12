@@ -1,5 +1,5 @@
-github.com/VonC/opts v1.1.3 h1:Evd4XKpDaiI6iEGCFfFR4pue57NwiggJ3tY33HnxJTc=
-github.com/VonC/opts v1.1.3/go.mod h1:7p7X/vlpKZmtaDFYKs956EujFqA6aCrOkcCaS6UBcR4=
+github.com/VonC/opts v1.2.1 h1:xRwAIgcosxLyBrKEzaP+Ne2pU0GlnzxdNW2BB/xLiyA=
+github.com/VonC/opts v1.2.1/go.mod h1:zaThqz5rrmVCzPVgXLxkq1nLNXMFlLPq2zd8BcFhvEI=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/hashicorp/errwrap v1.0.0 h1:hLrqtEDnRye3+sgx6z4qVLNuviH3MR5aQ0ykNJa/UYA=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
