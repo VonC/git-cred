@@ -8,6 +8,7 @@ import (
 	"github.com/spewerspew/spew"
 
 	"github.com/VonC/gitcred/internal/credhelper"
+	"github.com/VonC/gitcred/version"
 
 	"github.com/alecthomas/kong"
 )
@@ -21,6 +22,18 @@ type CLI struct {
 	Set        SetCmd   `cmd:"" help:"[password] set user password for a given host: -u/--username mandatory" name:"set" aliases:"store"`
 	Erase      EraseCmd `cmd:"" help:"erase password for a given host and username: -u/--username and -s/--servername mandatory" name:"erase" aliases:"rm,del,delete,remove"`
 	ch         CredHelper
+	Version    VersionFlag `name:"version" help:"Print version information and quit" short:"v"`
+	VersionC   VersionCmd  `cmd:"" help:"Show the version information" name:"version" aliases:"ver"`
+}
+
+type VersionFlag string
+
+func (v VersionFlag) Decode(ctx *kong.DecodeContext) error { return nil }
+func (v VersionFlag) IsBool() bool                         { return true }
+func (v VersionFlag) BeforeApply(app *kong.Kong, vars kong.Vars) error {
+	fmt.Println(version.String())
+	app.Exit(0)
+	return nil
 }
 
 type SetCmd struct {
@@ -36,6 +49,8 @@ func fatal(msg string, err error) {
 		log.Fatalf("%s: error '%+v'", msg, err)
 	}
 }
+
+type VersionCmd struct{}
 
 type CredHelper interface {
 	Get(username string) (string, error)
@@ -104,4 +119,9 @@ func (s *SetCmd) Run(c *Context) error {
 func (e *EraseCmd) Run(c *Context) error {
 	err := c.ch.Erase(c.Username, c.ch.Host())
 	return err
+}
+
+func (v *VersionCmd) Run() error {
+	fmt.Println(version.String())
+	return nil
 }
