@@ -8,7 +8,7 @@ import (
 )
 
 func (ch *credHelper) Get(username string) (string, error) {
-	fmt.Printf("Get")
+	fmt.Printf("Get\n")
 	res := ""
 	for _, cred := range ch.creds {
 		res = res + "\n" + username + "@" + cred.host + ":\n"

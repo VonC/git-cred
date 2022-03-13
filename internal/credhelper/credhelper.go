@@ -181,3 +181,10 @@ func (ch *credHelper) Host() string {
 	}
 	return ""
 }
+
+func (ch *credHelper) User() string {
+	if len(ch.creds) == 1 {
+		return ch.creds[0].username
+	}
+	return ""
+}
