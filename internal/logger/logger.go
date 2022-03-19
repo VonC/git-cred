@@ -98,7 +98,7 @@ func (l *Logger) Init() error {
 	return nil
 }
 
-func (l *Logger) Debug(msg string, v ...interface{}) {
+func (l *Logger) Debug(msg string, v ...any) {
 	if l.Config.Loglevel < DEBUG {
 		return
 	}
@@ -106,7 +106,7 @@ func (l *Logger) Debug(msg string, v ...interface{}) {
 	l.logger.Printf(msg, v...)
 }
 
-func (l *Logger) Info(msg string, v ...interface{}) {
+func (l *Logger) Info(msg string, v ...any) {
 	if l.Config.Loglevel < INFO {
 		return
 	}
@@ -114,7 +114,7 @@ func (l *Logger) Info(msg string, v ...interface{}) {
 	l.logger.Printf(msg, v...)
 }
 
-func (l *Logger) Error(theerr error, msg string, v ...interface{}) {
+func (l *Logger) Error(theerr error, msg string, v ...any) {
 	if l.Config.Loglevel < ERROR {
 		return
 	}
@@ -123,7 +123,7 @@ func (l *Logger) Error(theerr error, msg string, v ...interface{}) {
 	l.logger.Printf("Error %v", theerr)
 }
 
-func Debug(msg string, v ...interface{}) {
+func Debug(msg string, v ...any) {
 	gl.Debug(msg, v...)
 }
 
