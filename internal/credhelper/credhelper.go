@@ -73,14 +73,14 @@ func NewCredHelper(host, username string) (*credHelper, error) {
 				cred.username = hh[0]
 				cred.host = hh[1]
 			}
-			ch.creds = append(ch.creds, cred)
+			ch.creds = ch.creds.append(cred)
 		}
 	} else if username != "" {
 		cred := &cred{
 			host:     host,
 			username: username,
 		}
-		ch.creds = append(ch.creds, cred)
+		ch.creds = ch.creds.append(cred)
 	}
 
 	return ch, nil
@@ -187,4 +187,16 @@ func (ch *credHelper) User() string {
 		return ch.creds[0].username
 	}
 	return ""
+}
+
+func (creds creds) append(cred *cred) creds {
+	if cred.host == "" || cred.username == "" {
+		return creds
+	}
+	for _, acred := range creds {
+		if acred.host == cred.host && acred.username == cred.username {
+			return creds
+		}
+	}
+	return append(creds, cred)
 }
