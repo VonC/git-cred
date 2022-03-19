@@ -16,7 +16,7 @@ import (
 // CLI stores arguments and subcommands
 type CLI struct {
 	Servername string   `help:"repository hosting server name (hostname). If not set, use the one from current repository folder, if present in pwd" short:"s" type:"string"`
-	Debug      bool     `help:"if true, print Debug information." type:"bool" short:"d"`
+	Debug      bool     `help:"if true, print Debug information." type:"bool" short:"d" env:"DEBUG"`
 	Username   string   `help:"Get: username. If not set, use the one from from current repository remote URL, if present in pwd" short:"u"`
 	Get        GetCmd   `cmd:"" help:"get password for a given host and username: can read those from current folder repository" name:"get" default:""`
 	Set        SetCmd   `cmd:"" help:"[password] set user password for a given host: -u/--username mandatory" name:"set" aliases:"store"`
