@@ -89,14 +89,11 @@ func main() {
 		cli.Username = ch.User()
 	}
 
-	spew.Dump(cli)
-
 	if cli.Debug {
 		spew.Dump(cli)
 		q.Q(cli)
+		fmt.Printf("ctx command '%s'\n", ctx.Command())
 	}
-
-	fmt.Printf("ctx command '%s'\n", ctx.Command())
 
 	err = ctx.Run(&Context{CLI: &cli})
 	fatal("gitcred Unable to run:", err)
