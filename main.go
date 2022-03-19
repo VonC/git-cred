@@ -22,19 +22,11 @@ type CLI struct {
 	Set        SetCmd   `cmd:"" help:"[password] set user password for a given host: -u/--username mandatory" name:"set" aliases:"store"`
 	Erase      EraseCmd `cmd:"" help:"erase password for a given host and username: -u/--username and -s/--servername mandatory" name:"erase" aliases:"rm,del,delete,remove"`
 	ch         CredHelper
-	Version    VersionFlag `name:"version" help:"Print version information and quit" short:"v"`
+	Version    VersionFlag `name:"version" help:"Print version information and quit" short:"v" type:"counter"`
 	VersionC   VersionCmd  `cmd:"" help:"Show the version information" name:"version" aliases:"ver"`
 }
 
-type VersionFlag string
-
-func (v VersionFlag) Decode(ctx *kong.DecodeContext) error { return nil }
-func (v VersionFlag) IsBool() bool                         { return true }
-func (v VersionFlag) BeforeApply(app *kong.Kong, vars kong.Vars) error {
-	fmt.Println(version.String())
-	app.Exit(0)
-	return nil
-}
+type VersionFlag int
 
 type SetCmd struct {
 	Password string `arg:"" help:"user password or token" short:"p"`
@@ -95,6 +87,11 @@ func main() {
 		fmt.Printf("ctx command '%s'\n", ctx.Command())
 	}
 
+	if ctx.Command() != "version" && cli.Version > 0 {
+		fmt.Println(version.String(int(cli.Version)))
+		ctx.Exit(0)
+	}
+
 	err = ctx.Run(&Context{CLI: &cli})
 	fatal("gitcred Unable to run:", err)
 }
@@ -118,7 +115,8 @@ func (e *EraseCmd) Run(c *Context) error {
 	return err
 }
 
-func (v *VersionCmd) Run() error {
-	fmt.Println(version.String())
+func (v *VersionCmd) Run(c *Context) error {
+	spew.Dump(c)
+	fmt.Println(version.String(int(c.Version) + 1))
 	return nil
 }

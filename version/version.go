@@ -16,8 +16,9 @@ var (
 )
 
 // String displays all the version values
-func String() string {
+func String(verlevel int) string {
 	res := ""
+	res = res + fmt.Sprintf("Log Level : %d\n", verlevel)
 	res = res + fmt.Sprintf("Git Tag   : %s\n", GitTag)
 	res = res + fmt.Sprintf("Build User: %s\n", BuildUser)
 	res = res + fmt.Sprintf("Version   : %s\n", Version)
