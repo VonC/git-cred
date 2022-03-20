@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"log"
 
@@ -24,6 +25,7 @@ type CLI struct {
 	ch         CredHelper
 	Version    VersionFlag `name:"version" help:"Print version information and quit" short:"v" type:"counter"`
 	VersionC   VersionCmd  `cmd:"" help:"Show the version information" name:"version" aliases:"ver"`
+	versionFs  embed.FS
 }
 
 type VersionFlag int
@@ -56,6 +58,11 @@ type Context struct {
 	*CLI
 }
 
+// https://github.com/golang/go/issues/41191
+// https://stackoverflow.com/a/67357103/6309
+//go:embed version/*
+var versionFs embed.FS
+
 // myproject main entry
 func main() {
 
@@ -87,8 +94,10 @@ func main() {
 		fmt.Printf("ctx command '%s'\n", ctx.Command())
 	}
 
+	cli.versionFs = versionFs
+
 	if ctx.Command() != "version" && cli.Version > 0 {
-		fmt.Println(version.String(int(cli.Version)))
+		fmt.Printf(version.String(int(cli.Version), cli.versionFs))
 		ctx.Exit(0)
 	}
 
@@ -116,7 +125,7 @@ func (e *EraseCmd) Run(c *Context) error {
 }
 
 func (v *VersionCmd) Run(c *Context) error {
-	spew.Dump(c)
-	fmt.Println(version.String(int(c.Version) + 1))
+	//spew.Dump(c)
+	fmt.Printf(version.String(int(c.Version)+1, c.versionFs))
 	return nil
 }
