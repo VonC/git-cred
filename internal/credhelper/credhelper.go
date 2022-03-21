@@ -75,7 +75,7 @@ func NewCredHelper(host, username string) (*credHelper, error) {
 			}
 			ch.creds = ch.creds.append(cred)
 		}
-	} else if username != "" {
+	} else {
 		cred := &cred{
 			host:     host,
 			username: username,
@@ -169,12 +169,6 @@ func getUniqueHostsFromRemote(remote string) (hosts, error) {
 		host := u.Hostname()
 		if u.User.Username() != "" {
 			host = u.User.Username() + "@" + host
-		} else {
-			pp := strings.Split(u.Path, "/")
-			if len(pp) < 2 {
-				continue // for instance U:\ or git@server:...
-			}
-			host = pp[1] + "@" + host
 		}
 		res.add(host)
 	}
@@ -196,7 +190,7 @@ func (ch *credHelper) User() string {
 }
 
 func (creds creds) append(cred *cred) creds {
-	if cred.host == "" || cred.username == "" {
+	if cred.host == "" {
 		return creds
 	}
 	for _, acred := range creds {
