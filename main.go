@@ -77,17 +77,6 @@ func main() {
 
 	//fmt.Println(os.Args[0])
 
-	var ch CredHelper
-	ch, err = credhelper.NewCredHelper(cli.Servername, cli.Username)
-	fatal("Unable to get Credential Helper", err)
-	cli.ch = ch
-	if cli.Servername == "" {
-		cli.Servername = ch.Host()
-	}
-	if cli.Username == "" {
-		cli.Username = ch.User()
-	}
-
 	if cli.Debug {
 		spew.Dump(cli)
 		q.Q(cli)
@@ -99,6 +88,19 @@ func main() {
 	if ctx.Command() != "version" && cli.Version > 0 {
 		fmt.Printf(version.String(int(cli.Version), cli.versionFs))
 		ctx.Exit(0)
+	}
+
+	if ctx.Command() != "version" {
+		var ch CredHelper
+		ch, err = credhelper.NewCredHelper(cli.Servername, cli.Username)
+		fatal("Unable to get Credential Helper", err)
+		cli.ch = ch
+		if cli.Servername == "" {
+			cli.Servername = ch.Host()
+		}
+		if cli.Username == "" {
+			cli.Username = ch.User()
+		}
 	}
 
 	err = ctx.Run(&Context{CLI: &cli})
