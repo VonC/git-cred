@@ -162,12 +162,18 @@ func getUniqueHostsFromRemote(remote string) (hosts, error) {
 		if err != nil {
 			continue
 		}
+		if u.Scheme != "https" {
+			continue
+		}
 		// spew.Dump(u.Path)
 		host := u.Hostname()
 		if u.User.Username() != "" {
 			host = u.User.Username() + "@" + host
 		} else {
 			pp := strings.Split(u.Path, "/")
+			if len(pp) < 2 {
+				continue // for instance U:\ or git@server:...
+			}
 			host = pp[1] + "@" + host
 		}
 		res.add(host)

@@ -48,8 +48,10 @@ func String(verlevel int, versionFS embed.FS) string {
 			if info.Main.Sum != "" {
 				sum = " (" + info.Main.Sum + ")"
 			}
-			res = res + fmt.Sprintf("mod '%s'%s, %s\n", info.Main.Path, sum, info.GoVersion)
-			res = res + fmt.Sprintf("VCS %s revision %s%s, %s", vcs, rev, dirty, date)
+			res = res + fmt.Sprintf("mod '%s'%s, %s", info.Main.Path, sum, info.GoVersion)
+			if vcs != "" && rev != "" && date != "" {
+				res = res + fmt.Sprintf("\nVCS %s revision %s%s, %s", vcs, rev, dirty, date)
+			}
 			/*
 				op, err := json.MarshalIndent(info.Settings, "", " ")
 				if err != nil {
@@ -61,12 +63,13 @@ func String(verlevel int, versionFS embed.FS) string {
 		//spew.Dump(info)
 	}
 	if verlevel >= 3 {
-		res = res + "\n"
-		res = res + fmt.Sprintf("Log Level : %d\n", verlevel)
-		res = res + fmt.Sprintf("Git Tag   : %s\n", GitTag)
-		res = res + fmt.Sprintf("Build User: %s\n", BuildUser)
-		res = res + fmt.Sprintf("Version   : %s\n", Version)
-		res = res + fmt.Sprintf("BuildDate : %s\n", BuildDate)
+		if GitTag != "" && BuildUser != "" && Version != "" && BuildDate != "" {
+			res = res + "\n"
+			res = res + fmt.Sprintf("Git Tag   : %s\n", GitTag)
+			res = res + fmt.Sprintf("Build User: %s\n", BuildUser)
+			res = res + fmt.Sprintf("Version   : %s\n", Version)
+			res = res + fmt.Sprintf("BuildDate : %s\n", BuildDate)
+		}
 	}
 	return res
 }
