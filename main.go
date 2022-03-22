@@ -66,14 +66,8 @@ func main() {
 
 	var err error
 
-	//dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	//fatal("Unable to find current program execution directory", err)
-	//log.Println(dir)
 	var cli CLI
 	ctx := kong.Parse(&cli)
-	//ctx.BindTo(os.Stdout, (*io.Writer)(nil))
-
-	//fmt.Println(os.Args[0])
 
 	if cli.Debug {
 		spew.Dump(cli)
