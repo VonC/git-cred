@@ -7,25 +7,37 @@ import (
 	"github.com/VonC/gitcred/internal/syscall"
 )
 
-func (ch *credHelper) Get(username string) (string, error) {
-	fmt.Printf("Get\n")
+func (ch *credHelper) Get(username, servername string) (string, error) {
+	fmt.Printf("Get user='%s', server='%s', %d creds", username, servername, len(ch.creds))
 	res := ""
-	for _, cred := range ch.creds {
-		res = res + "\n" + username + "@" + cred.host + ":\n"
-		u := ""
-		if username != "" {
-			u = "\\nusername=" + username
-		} else if cred.username != "" {
-			u = "\\nusername=" + cred.username
-		}
-		cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=%s%s\"|\"%s\" get", cred.host, ch.protocol, u, ch.exe)
-		fmt.Println(cmd)
-		_, stdout, err := syscall.ExecCmd(cmd)
-
-		if err != nil {
-			return "", fmt.Errorf("unable to get credential.helper value for Host '%s@%s':\n%w", username, cred.host, err)
-		}
-		res = res + strings.TrimSpace(stdout.String())
+	if servername != "" {
+		return ch.getus(username, servername)
 	}
-	return res, nil
+	for _, cred := range ch.creds {
+		if username == "" {
+			username = cred.username
+		}
+		res = res + "\n\n" + username + "@" + cred.host + ":\n"
+		ares, err := ch.getus(username, cred.host)
+		if err != nil {
+			return res, err
+		}
+		res = res + ares
+	}
+	return strings.TrimSpace(res), nil
+}
+
+func (ch *credHelper) getus(username, servername string) (string, error) {
+	u := ""
+	if username != "" {
+		u = "\\nusername=" + username
+	}
+	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=%s%s\"|\"%s\" get", servername, ch.protocol, u, ch.exe)
+	res := "\n" + cmd
+	_, stdout, err := syscall.ExecCmd(cmd)
+
+	if err != nil {
+		return "", fmt.Errorf("unable to get credential.helper value for Host '%s@%s':\n%w", username, servername, err)
+	}
+	return res + "\n" + strings.TrimSpace(stdout.String()), nil
 }
