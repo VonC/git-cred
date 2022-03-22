@@ -61,12 +61,12 @@ func NewCredHelper(host, username string) (*credHelper, error) {
 	ch.exe = strings.TrimSpace(credHelperFullName)
 
 	if host == "" {
-		cred := &cred{}
 		hosts, err := getLocalHosts()
 		if err != nil {
 			return nil, err
 		}
 		for _, host := range hosts {
+			cred := &cred{}
 			hh := strings.Split(host, "@")
 			cred.host = hh[0]
 			if len(hh) == 2 {
