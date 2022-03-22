@@ -175,20 +175,6 @@ func getUniqueHostsFromRemote(remote string) (hosts, error) {
 	return hosts(res), nil
 }
 
-func (ch *credHelper) Host() string {
-	if len(ch.creds) == 1 {
-		return ch.creds[0].host
-	}
-	return ""
-}
-
-func (ch *credHelper) User() string {
-	if len(ch.creds) == 1 {
-		return ch.creds[0].username
-	}
-	return ""
-}
-
 func (creds creds) append(cred *cred) creds {
 	if cred.host == "" {
 		return creds

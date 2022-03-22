@@ -47,11 +47,9 @@ func fatal(msg string, err error) {
 type VersionCmd struct{}
 
 type CredHelper interface {
-	Get(username string) (string, error)
+	Get(username string, servername string) (string, error)
 	Set(username, password, host string) error
 	Erase(username, host string) error
-	Host() string
-	User() string
 }
 
 type Context struct {
@@ -95,12 +93,6 @@ func main() {
 		ch, err = credhelper.NewCredHelper(cli.Servername, cli.Username)
 		fatal("Unable to get Credential Helper", err)
 		cli.ch = ch
-		if cli.Servername == "" {
-			cli.Servername = ch.Host()
-		}
-		if cli.Username == "" {
-			cli.Username = ch.User()
-		}
 	}
 
 	err = ctx.Run(&Context{CLI: &cli})
@@ -108,7 +100,7 @@ func main() {
 }
 
 func (s *GetCmd) Run(c *Context) error {
-	get, err := c.ch.Get(c.Username)
+	get, err := c.ch.Get(c.Username, c.Servername)
 	if err != nil {
 		return err
 	}
