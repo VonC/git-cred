@@ -109,12 +109,12 @@ func (s *GetCmd) Run(c *Context) error {
 }
 
 func (s *SetCmd) Run(c *Context) error {
-	err := c.ch.Set(c.Username, s.Password, c.ch.Host())
+	err := c.ch.Set(c.Username, s.Password, c.Servername)
 	return err
 }
 
 func (e *EraseCmd) Run(c *Context) error {
-	err := c.ch.Erase(c.Username, c.ch.Host())
+	err := c.ch.Erase(c.Username, c.Servername)
 	return err
 }
 
