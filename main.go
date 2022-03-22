@@ -19,8 +19,8 @@ type CLI struct {
 	Servername string   `help:"repository hosting server name (hostname). If not set, use the one from current repository folder, if present in pwd" short:"s" type:"string"`
 	Debug      bool     `help:"if true, print Debug information." type:"bool" short:"d" env:"DEBUG"`
 	Username   string   `help:"Get: username. If not set, use the one from from current repository remote URL, if present in pwd" short:"u"`
-	Get        GetCmd   `cmd:"" help:"get password for a given host and username: can read those from current folder repository" name:"get" default:""`
-	Set        SetCmd   `cmd:"" help:"[password] set user password for a given host: -u/--username mandatory" name:"set" aliases:"store"`
+	Get        GetCmd   `cmd:"" help:"get password for a given servername and username: can read those from current folder repository" name:"get" default:""`
+	Set        SetCmd   `cmd:"" help:"[password] set user password for a given host: -u/--username and -s/--servername mandatory" name:"set" aliases:"store"`
 	Erase      EraseCmd `cmd:"" help:"erase password for a given host and username: -u/--username and -s/--servername mandatory" name:"erase" aliases:"rm,del,delete,remove"`
 	ch         CredHelper
 	Version    VersionFlag `name:"version" help:"Print version information and quit" short:"v" type:"counter"`
@@ -48,8 +48,8 @@ type VersionCmd struct{}
 
 type CredHelper interface {
 	Get(username string, servername string) (string, error)
-	Set(username, password, host string) error
-	Erase(username, host string) error
+	Set(username, password, servername string) error
+	Erase(username, servername string) error
 }
 
 type Context struct {

@@ -6,20 +6,20 @@ import (
 	"github.com/VonC/gitcred/internal/syscall"
 )
 
-func (ch *credHelper) Erase(username, host string) error {
+func (ch *credHelper) Erase(username, servername string) error {
 	fmt.Println("Erase")
 	if username == "" {
 		return fmt.Errorf("erase: --username is mandatory")
 	}
-	if host == "" {
+	if servername == "" {
 		return fmt.Errorf("erase: --servername is mandatory")
 	}
-	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\"|\"%s\" erase", host, username, ch.exe)
+	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\"|\"%s\" erase", servername, username, ch.exe)
 	fmt.Println(cmd)
 	_, _, err := syscall.ExecCmd(cmd)
 
 	if err != nil {
-		return fmt.Errorf("unable to erase credential.helper value for Host '%s' and username '%s':\n%w", host, username, err)
+		return fmt.Errorf("unable to erase credential.helper value for Host '%s' and username '%s':\n%w", servername, username, err)
 	}
 	return nil
 }

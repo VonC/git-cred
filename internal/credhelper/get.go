@@ -17,8 +17,8 @@ func (ch *credHelper) Get(username, servername string) (string, error) {
 		if username == "" {
 			username = cred.username
 		}
-		res = res + "\n\n" + username + "@" + cred.host + ":\n"
-		ares, err := ch.getus(username, cred.host)
+		res = res + "\n\n" + username + "@" + cred.servername + ":\n"
+		ares, err := ch.getus(username, cred.servername)
 		if err != nil {
 			return res, err
 		}

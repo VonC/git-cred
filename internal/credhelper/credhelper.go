@@ -22,11 +22,11 @@ type credHelper struct {
 type creds []*cred
 
 type cred struct {
-	host     string
-	username string
+	servername string
+	username   string
 }
 
-func NewCredHelper(host, username string) (*credHelper, error) {
+func NewCredHelper(servername, username string) (*credHelper, error) {
 	ch := &credHelper{
 		protocol: "https",
 		creds:    make(creds, 0),
@@ -60,25 +60,25 @@ func NewCredHelper(host, username string) (*credHelper, error) {
 
 	ch.exe = strings.TrimSpace(credHelperFullName)
 
-	if host == "" {
-		hosts, err := getLocalHosts()
+	if servername == "" {
+		userServerNames, err := getRemoteUserServernames()
 		if err != nil {
 			return nil, err
 		}
-		for _, host := range hosts {
+		for _, userServername := range userServerNames {
 			cred := &cred{}
-			hh := strings.Split(host, "@")
-			cred.host = hh[0]
+			hh := strings.Split(userServername, "@")
+			cred.servername = hh[0]
 			if len(hh) == 2 {
 				cred.username = hh[0]
-				cred.host = hh[1]
+				cred.servername = hh[1]
 			}
 			ch.creds = ch.creds.append(cred)
 		}
 	} else {
 		cred := &cred{
-			host:     host,
-			username: username,
+			servername: servername,
+			username:   username,
 		}
 		ch.creds = ch.creds.append(cred)
 	}
@@ -88,19 +88,19 @@ func NewCredHelper(host, username string) (*credHelper, error) {
 
 type orderedSet map[string]bool
 type remotes orderedSet
-type hosts orderedSet
+type userServernames orderedSet
 
-func getLocalHosts() ([]string, error) {
+func getRemoteUserServernames() ([]string, error) {
 	res := make([]string, 0)
 	remotes, err := getUniqueRemoteNames()
 	if err != nil {
 		return res, err
 	}
-	hosts, err := remotes.getUniqueHosts()
+	userServernames, err := remotes.getUniqueUserServernames()
 	if err != nil {
 		return res, err
 	}
-	return orderedSet(hosts).set(), nil
+	return orderedSet(userServernames).set(), nil
 }
 
 func getUniqueRemoteNames() (remotes, error) {
@@ -135,21 +135,21 @@ func (os orderedSet) set() []string {
 	return keys
 }
 
-func (remotes remotes) getUniqueHosts() (hosts, error) {
+func (remotes remotes) getUniqueUserServernames() (userServernames, error) {
 	res := make(orderedSet)
 	for remote := range remotes {
-		hosts, err := getUniqueHostsFromRemote(remote)
+		userServernames, err := getUniqueUserServernameFromRemote(remote)
 		if err != nil {
-			return nil, fmt.Errorf("unable to get host from remote name '%s'", remote)
+			return nil, fmt.Errorf("unable to get user@server name from remote name '%s'", remote)
 		}
-		for host := range hosts {
-			res.add(host)
+		for userServername := range userServernames {
+			res.add(userServername)
 		}
 	}
-	return hosts(res), nil
+	return userServernames(res), nil
 }
 
-func getUniqueHostsFromRemote(remote string) (hosts, error) {
+func getUniqueUserServernameFromRemote(remote string) (userServernames, error) {
 	res := make(orderedSet)
 	stderr, stdout, err := syscall.ExecCmd("git remote get-url --all " + remote)
 	serr := stderr.String()
@@ -166,21 +166,21 @@ func getUniqueHostsFromRemote(remote string) (hosts, error) {
 			continue
 		}
 		// spew.Dump(u.Path)
-		host := u.Hostname()
+		userServername := u.Hostname()
 		if u.User.Username() != "" {
-			host = u.User.Username() + "@" + host
+			userServername = u.User.Username() + "@" + userServername
 		}
-		res.add(host)
+		res.add(userServername)
 	}
-	return hosts(res), nil
+	return userServernames(res), nil
 }
 
 func (creds creds) append(cred *cred) creds {
-	if cred.host == "" {
+	if cred.servername == "" {
 		return creds
 	}
 	for _, acred := range creds {
-		if acred.host == cred.host && acred.username == cred.username {
+		if acred.servername == cred.servername && acred.username == cred.username {
 			return creds
 		}
 	}
