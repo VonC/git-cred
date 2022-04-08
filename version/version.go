@@ -8,8 +8,6 @@ import (
 )
 
 var (
-	// Version semver for syncrepos (set through go build -ldflags)
-	Version string
 	// BuildUser is the user login who initiated the build (set through go build -ldflags)
 	BuildUser string
 	// GitTag is the result of git describe (set through go build -ldflags)
@@ -63,11 +61,10 @@ func String(verlevel int, versionFS embed.FS) string {
 		//spew.Dump(info)
 	}
 	if verlevel >= 3 {
-		if GitTag != "" && BuildUser != "" && Version != "" && BuildDate != "" {
+		if GitTag != "" && BuildUser != "" && BuildDate != "" {
 			res = res + "\n"
 			res = res + fmt.Sprintf("Git Tag   : %s\n", GitTag)
 			res = res + fmt.Sprintf("Build User: %s\n", BuildUser)
-			res = res + fmt.Sprintf("Version   : %s\n", Version)
 			res = res + fmt.Sprintf("BuildDate : %s\n", BuildDate)
 		}
 	}
