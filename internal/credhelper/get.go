@@ -8,17 +8,20 @@ import (
 )
 
 func (ch *credHelper) Get(username, servername string) (string, error) {
-	fmt.Printf("Get user='%s', server='%s', %d creds", username, servername, len(ch.creds))
+	fmt.Printf("Get user='%s', server='%s', %d creds\n\n", username, servername, len(ch.creds))
 	res := ""
 	if servername != "" {
 		return ch.getus(username, servername)
 	}
+	aUsername := ""
 	for _, cred := range ch.creds {
+		//spew.Dump(cred)
+		aUsername = username
 		if username == "" {
-			username = cred.username
+			aUsername = cred.username
 		}
-		res = res + "\n\n" + username + "@" + cred.servername + ":\n"
-		ares, err := ch.getus(username, cred.servername)
+		res = res + "\n\n" + aUsername + "@" + cred.servername + ":\n"
+		ares, err := ch.getus(aUsername, cred.servername)
 		if err != nil {
 			return res, err
 		}
@@ -34,6 +37,7 @@ func (ch *credHelper) getus(username, servername string) (string, error) {
 	}
 	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=%s%s\"|\"%s\" get", servername, ch.protocol, u, ch.exe)
 	res := "\n" + cmd
+	// fmt.Println(cmd)
 	_, stdout, err := syscall.ExecCmd(cmd)
 
 	if err != nil {
