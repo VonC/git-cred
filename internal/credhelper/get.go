@@ -41,6 +41,9 @@ func (ch *credHelper) getus(username, servername string) (string, error) {
 	_, stdout, err := syscall.ExecCmd(cmd)
 
 	if err != nil {
+		if strings.Contains(err.Error(), "Cannot prompt because user interactivity has been disabled") {
+			return res + "\n" + "<no credentials registered>", nil
+		}
 		return "", fmt.Errorf("unable to get credential.helper value for Host '%s@%s':\n%w", username, servername, err)
 	}
 	return res + "\n" + strings.TrimSpace(stdout.String()), nil
