@@ -6,6 +6,7 @@ package syscall
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"syscall"
@@ -26,6 +27,8 @@ func ExecCmd(scmd string) (berr *bytes.Buffer, bout *bytes.Buffer, err error) {
 	//fmt.Printf("Execute '%s'\n", cmd.SysProcAttr.CmdLine)
 	cmd.Stderr = berr
 	cmd.Stdout = bout
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, "GCM_INTERACTIVE=false")
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		//log.Printf("stdin error %s [%s]", err, berr.String())
