@@ -55,8 +55,12 @@ func NewCredHelper(servername, username string) (*credHelper, error) {
 		return nil, fmt.Errorf("unable to get Git path (stderr '%s'): %w", serr, err)
 	}
 
-	credHelperFullName := filepath.Join(filepath.Dir(filepath.Dir(fname)), "mingw64/libexec/git-core", fmt.Sprintf("git-credential-%s", credHelperName))
-	// fmt.Println(credHelperFullName)
+	rootf := filepath.Dir(filepath.Dir(fname))
+	if idx := strings.Index(rootf, "mingw64"); idx != -1 {
+		rootf = rootf[:idx]
+	}
+	credHelperFullName := filepath.Join(rootf, "mingw64/libexec/git-core", fmt.Sprintf("git-credential-%s", credHelperName))
+	fmt.Println("credHelperFullName = '" + credHelperFullName + "'")
 
 	ch.exe = strings.TrimSpace(credHelperFullName)
 
