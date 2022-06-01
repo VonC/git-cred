@@ -5,6 +5,8 @@ Reads cached credentials using the configured Git credential helper.
 
     go install github.com/VonC/gitcred@latest
 
+[![Open in VS Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://vscode.dev/github/VonC/gitcred)
+
 ## Problem
 
 A git credential helper is used to cache HTTPS remote Git hosting service credentials (username/password or token)
