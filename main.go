@@ -79,7 +79,7 @@ func main() {
 	cli.versionFs = versionFs
 
 	if ctx.Command() != "version" && cli.Version > 0 {
-		fmt.Printf(version.String(int(cli.Version), cli.versionFs))
+		fmt.Println(version.String(int(cli.Version), cli.versionFs))
 		ctx.Exit(0)
 	}
 
@@ -115,6 +115,6 @@ func (e *EraseCmd) Run(c *Context) error {
 
 func (v *VersionCmd) Run(c *Context) error {
 	//spew.Dump(c)
-	fmt.Printf(version.String(int(c.Version)+1, c.versionFs))
+	fmt.Println(version.String(int(c.Version)+1, c.versionFs))
 	return nil
 }
