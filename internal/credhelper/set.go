@@ -2,9 +2,13 @@ package credhelper
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/VonC/git-cred/internal/syscall"
 )
+
+// https://regex101.com/r/VbVbfs/1
+var rePassword = regexp.MustCompile(`(?m)password=[^"]*?"`)
 
 func (ch *credHelper) Set(username, password, servername string) error {
 	fmt.Println("Set")
@@ -18,7 +22,8 @@ func (ch *credHelper) Set(username, password, servername string) error {
 		return fmt.Errorf("set: password is mandatory")
 	}
 	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\\npassword=%s\"|\"%s\" store", servername, username, password, ch.exe)
-	fmt.Println(cmd)
+	obfuscatedCmd := rePassword.ReplaceAllString(cmd, `password=xxxx"`)
+	fmt.Println(obfuscatedCmd)
 	_, _, err := syscall.ExecCmd(cmd)
 
 	if err != nil {
