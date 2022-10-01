@@ -8,8 +8,8 @@ import (
 	"github.com/ryboe/q"
 	"github.com/spewerspew/spew"
 
-	"github.com/VonC/gitcred/internal/credhelper"
-	"github.com/VonC/gitcred/version"
+	"github.com/VonC/git-cred/internal/credhelper"
+	"github.com/VonC/git-cred/version"
 
 	"github.com/alecthomas/kong"
 )
@@ -58,10 +58,11 @@ type Context struct {
 
 // https://github.com/golang/go/issues/41191
 // https://stackoverflow.com/a/67357103/6309
+//
 //go:embed version/*
 var versionFs embed.FS
 
-// myproject main entry
+// git-cred main entry
 func main() {
 
 	var err error

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/VonC/gitcred/internal/syscall"
+	"github.com/VonC/git-cred/internal/syscall"
 )
 
 func (ch *credHelper) Get(username, servername string) (string, error) {

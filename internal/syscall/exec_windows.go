@@ -11,7 +11,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/VonC/gitcred/internal/logger"
+	"github.com/VonC/git-cred/internal/logger"
 )
 
 // ExecCmd starts a sh -c 'scmd' session.

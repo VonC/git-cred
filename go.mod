@@ -1,4 +1,4 @@
-module github.com/VonC/gitcred
+module github.com/VonC/git-cred
 
 go 1.18
 

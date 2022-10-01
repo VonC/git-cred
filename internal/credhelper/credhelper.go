@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/VonC/gitcred/internal/syscall"
+	"github.com/VonC/git-cred/internal/syscall"
 )
 
 type credHelper struct {

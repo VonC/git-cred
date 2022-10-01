@@ -3,7 +3,7 @@ package credhelper
 import (
 	"fmt"
 
-	"github.com/VonC/gitcred/internal/syscall"
+	"github.com/VonC/git-cred/internal/syscall"
 )
 
 func (ch *credHelper) Erase(username, servername string) error {
