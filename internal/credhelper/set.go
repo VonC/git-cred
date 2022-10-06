@@ -21,8 +21,8 @@ func (ch *credHelper) Set(username, password, servername string) error {
 	if password == "" {
 		return fmt.Errorf("set: password is mandatory")
 	}
-	cmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\\npassword=%s\"|\"%s\" store", servername, username, password, ch.exe)
-	obfuscatedCmd := rePassword.ReplaceAllString(cmd, `password=xxxx"`)
+	obfuscatedCmd := fmt.Sprintf("printf \"host=%s\\nprotocol=https\\nusername=%s\\npassword=xxxx\"|\"%s\" store", servername, username, ch.exe)
+	cmd := rePassword.ReplaceAllString(obfuscatedCmd, fmt.Sprintf(`password=%s"`, password))
 	fmt.Println(obfuscatedCmd)
 	_, _, err := syscall.ExecCmd(cmd)
 
